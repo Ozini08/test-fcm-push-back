@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test_fcm_push_back.fcm.dao.mapper.FCMMapper">
+    <select id="fcmEnableList">
+        SELECT
+            MEM.MEMBER_NO,
+            MEM.MEMBER_NAME,
+            TOK.TOKEN_NO,
+            TOK.FCM_TOKEN,
+            TOK.ENABLED
+        FROM FCM_TOKENS AS TOK
+        LEFT JOIN YA_YTH_MEMBER AS MEM
+            ON MEM.MEMBER_NO = TOK.MEMBER_NO
+        WHERE TOK.ENABLED = 1
+    </select>
+    <select id="findByMemberNo">
+        SELECT
+            MEM.MEMBER_NO
+        FROM FCM_TOKENS AS TOK
+        LEFT JOIN YA_YTH_MEMBER AS MEM
+            ON MEM.MEMBER_NO = TOK.MEMBER_NO
+        WHERE TOK.MEMBER_NO = #{findMember}
+    </select>
+    <insert id="saveToken">
+        INSERT INTO
+            FCM_TOKENS(
+                MEMBER_NO,
+                FCM_TOKEN,
+                ENABLED)
+        VALUES(
+            #{saveToken.memberNo},
+            #{saveToken.fcmToken},
+            #{saveToken.enabled}
+        )
+    </insert>
+    <update id="deleteByMemberNo">
+        UPDATE
+            FCM_TOKENS
+        SET
+            FCM_TOKEN = "",
+            ENABLED = 0
+        WHERE
+            MEMBER_NO = #{deleteToken}
+    </update>
+    <update id="updateToken">
+        UPDATE
+            FCM_TOKENS
+        SET
+            FCM_TOKEN = #{updateToken.fcmToken},
+            ENABLED = 1
+        WHERE
+            MEMBER_NO = #{updateToken.memberNo}
+    </update>
+</mapper>
